@@ -35,6 +35,10 @@ await pdev.projects.list({ page, limit });
 
 // Transactions
 await pdev.transactions.get(id);
+
+// Webhooks
+import { parseWebhook } from '@pague-dev/sdk-node';
+const event = parseWebhook(req.body);
 ```
 
 ## Recursos
