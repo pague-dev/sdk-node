@@ -1,5 +1,5 @@
 {
-  "name": "pague-dev",
+  "name": "@pague-dev/sdk-node",
   "version": "0.1.0",
   "description": "Node.js SDK for the pague.dev API",
   "main": "./dist/index.cjs",
