@@ -46,6 +46,10 @@ await pdev.transactions.get(id);
 - **Transactions** - Consulta de transações
 - **Webhooks** - Notificações em tempo real
 
+## Exemplo
+
+Veja uma aplicação completa usando o SDK: **[github.com/pague-dev/sdk-example](https://github.com/pague-dev/sdk-example)**
+
 ## Documentação
 
 Guias e exemplos completos: **[docs.pague.dev](https://docs.pague.dev)**
