@@ -3,8 +3,9 @@
  */
 export type WebhookEventType =
   | 'payment_completed'
-  | 'payment_failed'
-  | 'refund_completed';
+  | 'refund_completed'
+  | 'withdrawal_completed'
+  | 'withdrawal_failed';
 
 /**
  * Base webhook payload structure
@@ -40,26 +41,8 @@ export interface PaymentCompletedData {
   status: 'completed';
   /** ISO 8601 timestamp of when payment was completed */
   completedAt: string;
-}
-
-/**
- * Data payload for payment_failed event
- */
-export interface PaymentFailedData {
-  /** Transaction identifier */
-  transactionId: string;
-  /** Payment amount */
-  amount: number;
-  /** Currency code (e.g., "BRL") */
-  currency: string;
-  /** Payment method used (e.g., "pix") */
-  paymentMethod: string;
-  /** Payment status */
-  status: 'failed';
-  /** ISO 8601 timestamp of when payment failed */
-  failedAt: string;
-  /** Reason for failure (e.g., "expired", "insufficient_funds") */
-  failureReason: string;
+  /** Your external reference ID (optional) */
+  externalReference?: string;
 }
 
 /**
@@ -72,14 +55,58 @@ export interface RefundCompletedData {
   originalTransactionId: string;
   /** Refunded amount */
   amount: number;
-  /** Fees (typically 0 for refunds) */
+  /** Fees charged for the refund */
   feeAmount: number;
+  /** Net amount after fees */
+  netAmount: number;
   /** Currency code (e.g., "BRL") */
   currency: string;
   /** Refund status */
   status: 'completed';
   /** ISO 8601 timestamp of when refund was completed */
-  refundedAt: string;
+  completedAt: string;
+}
+
+/**
+ * Data payload for withdrawal_completed event
+ */
+export interface WithdrawalCompletedData {
+  /** Withdrawal identifier */
+  withdrawalId: string;
+  /** Withdrawal amount */
+  amount: number;
+  /** Fees charged for the withdrawal */
+  feeAmount: number;
+  /** Net amount transferred (amount - feeAmount) */
+  netAmount: number;
+  /** Currency code (e.g., "BRL") */
+  currency: string;
+  /** Withdrawal status */
+  status: 'completed';
+  /** ISO 8601 timestamp of when withdrawal was completed */
+  completedAt: string;
+}
+
+/**
+ * Data payload for withdrawal_failed event
+ */
+export interface WithdrawalFailedData {
+  /** Withdrawal identifier */
+  withdrawalId: string;
+  /** Withdrawal amount */
+  amount: number;
+  /** Fees that would have been charged */
+  feeAmount: number;
+  /** Net amount that would have been transferred */
+  netAmount: number;
+  /** Currency code (e.g., "BRL") */
+  currency: string;
+  /** Withdrawal status */
+  status: 'failed';
+  /** ISO 8601 timestamp of when withdrawal failed */
+  failedAt: string;
+  /** Reason for failure (e.g., "insufficient_funds", "invalid_account") */
+  failureReason: string;
 }
 
 /**
@@ -88,22 +115,28 @@ export interface RefundCompletedData {
 export type PaymentCompletedEvent = WebhookPayload<'payment_completed', PaymentCompletedData>;
 
 /**
- * Payment failed webhook event
- */
-export type PaymentFailedEvent = WebhookPayload<'payment_failed', PaymentFailedData>;
-
-/**
  * Refund completed webhook event
  */
 export type RefundCompletedEvent = WebhookPayload<'refund_completed', RefundCompletedData>;
+
+/**
+ * Withdrawal completed webhook event
+ */
+export type WithdrawalCompletedEvent = WebhookPayload<'withdrawal_completed', WithdrawalCompletedData>;
+
+/**
+ * Withdrawal failed webhook event
+ */
+export type WithdrawalFailedEvent = WebhookPayload<'withdrawal_failed', WithdrawalFailedData>;
 
 /**
  * Union type of all possible webhook events
  */
 export type WebhookEvent =
   | PaymentCompletedEvent
-  | PaymentFailedEvent
-  | RefundCompletedEvent;
+  | RefundCompletedEvent
+  | WithdrawalCompletedEvent
+  | WithdrawalFailedEvent;
 
 /**
  * Webhook headers sent with each request
@@ -116,4 +149,3 @@ export interface WebhookHeaders {
   /** Content type (always application/json) */
   'content-type': string;
 }
-
