@@ -27,6 +27,8 @@ export interface WebhookPayload<T extends WebhookEventType, D> {
 export interface PaymentCompletedData {
   /** Transaction identifier */
   transactionId: string;
+  /** Environment where the transaction occurred */
+  environment: 'production' | 'sandbox';
   /** Payment amount */
   amount: number;
   /** Platform fees charged */
@@ -53,6 +55,8 @@ export interface RefundCompletedData {
   refundTransactionId: string;
   /** Original payment transaction ID that was refunded */
   originalTransactionId: string;
+  /** Environment where the transaction occurred */
+  environment: 'production' | 'sandbox';
   /** Refunded amount */
   amount: number;
   /** Fees charged for the refund */
@@ -73,6 +77,8 @@ export interface RefundCompletedData {
 export interface WithdrawalCompletedData {
   /** Withdrawal identifier */
   withdrawalId: string;
+  /** Environment where the withdrawal occurred */
+  environment: 'production' | 'sandbox';
   /** Withdrawal amount */
   amount: number;
   /** Fees charged for the withdrawal */
@@ -93,6 +99,8 @@ export interface WithdrawalCompletedData {
 export interface WithdrawalFailedData {
   /** Withdrawal identifier */
   withdrawalId: string;
+  /** Environment where the withdrawal occurred */
+  environment: 'production' | 'sandbox';
   /** Withdrawal amount */
   amount: number;
   /** Fees that would have been charged */

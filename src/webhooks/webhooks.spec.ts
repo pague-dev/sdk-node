@@ -9,6 +9,7 @@ describe('parseWebhook', () => {
     timestamp: '2026-01-11T19:03:28.280Z',
     data: {
       transactionId: 'a0b78f10-c7f4-4f5d-98dd-3e36eafeb812',
+      environment: 'sandbox',
       amount: 100.21,
       feeAmount: 0.5,
       netAmount: 99.71,
@@ -48,6 +49,7 @@ describe('parseWebhook', () => {
       data: {
         refundTransactionId: 'c92d45e6-8b33-4f12-a789-2e56f8901def',
         originalTransactionId: 'a0b78f10-c7f4-4f5d-98dd-3e36eafeb812',
+        environment: 'sandbox',
         amount: 50.0,
         feeAmount: 0.25,
         netAmount: 49.75,
@@ -74,6 +76,7 @@ describe('parseWebhook', () => {
       timestamp: '2026-01-11T19:08:21.953Z',
       data: {
         withdrawalId: 'e73775b5-70ee-4bad-be4c-4acff9890e27',
+        environment: 'sandbox',
         amount: 500.0,
         feeAmount: 2.5,
         netAmount: 497.5,
@@ -100,6 +103,7 @@ describe('parseWebhook', () => {
       timestamp: '2026-01-11T19:15:42.123Z',
       data: {
         withdrawalId: 'b84f12c3-9a21-4e67-bc88-1d45f6789abc',
+        environment: 'sandbox',
         amount: 1000.0,
         feeAmount: 5.0,
         netAmount: 995.0,
