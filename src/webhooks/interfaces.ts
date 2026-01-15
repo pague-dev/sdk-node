@@ -45,6 +45,8 @@ export interface PaymentCompletedData {
   completedAt: string;
   /** Your external reference ID (optional) */
   externalReference?: string;
+  /** Custom metadata passed when creating the payment */
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -69,6 +71,8 @@ export interface RefundCompletedData {
   status: 'completed';
   /** ISO 8601 timestamp of when refund was completed */
   completedAt: string;
+  /** Custom metadata from the original payment */
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -91,6 +95,8 @@ export interface WithdrawalCompletedData {
   status: 'completed';
   /** ISO 8601 timestamp of when withdrawal was completed */
   completedAt: string;
+  /** Custom metadata from the withdrawal request */
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -115,6 +121,8 @@ export interface WithdrawalFailedData {
   failedAt: string;
   /** Reason for failure (e.g., "insufficient_funds", "invalid_account") */
   failureReason: string;
+  /** Custom metadata from the withdrawal request */
+  metadata?: Record<string, unknown>;
 }
 
 /**
