@@ -35,6 +35,10 @@ await pdev.customers.list({ page, limit, search });
 await pdev.projects.create({ name, color });
 await pdev.projects.list({ page, limit });
 
+// Withdrawals (Saques PIX)
+await pdev.withdrawals.create({ amount, pixKey, pixKeyType, holderName, holderDocument });
+await pdev.withdrawals.create({ amount, bankAccountId });
+
 // Transactions
 await pdev.transactions.get(id);
 
@@ -49,6 +53,7 @@ const event = parseWebhook(req.body);
 - **Charges** - Links de pagamento
 - **Customers** - Gestão de clientes
 - **Projects** - Organização por projetos
+- **Withdrawals** - Saques via PIX (avulso ou conta salva)
 - **Transactions** - Consulta de transações
 - **Webhooks** - Notificações em tempo real
 

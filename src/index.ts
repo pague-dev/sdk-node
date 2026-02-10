@@ -6,3 +6,4 @@ export * from './pix/interfaces';
 export * from './projects/interfaces';
 export * from './transactions/interfaces';
 export * from './webhooks';
+export * from './withdrawals/interfaces';

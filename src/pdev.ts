@@ -5,6 +5,7 @@ import type { ErrorResponse, GetOptions, PostOptions, Response } from './interfa
 import { Pix } from './pix/pix';
 import { Projects } from './projects/projects';
 import { Transactions } from './transactions/transactions';
+import { Withdrawals } from './withdrawals/withdrawals';
 
 export class Pdev {
   readonly key: string;
@@ -16,6 +17,7 @@ export class Pdev {
   readonly projects: Projects;
   readonly charges: Charges;
   readonly transactions: Transactions;
+  readonly withdrawals: Withdrawals;
 
   constructor(key?: string) {
     if (!key) {
@@ -46,6 +48,7 @@ export class Pdev {
     this.projects = new Projects(this);
     this.charges = new Charges(this);
     this.transactions = new Transactions(this);
+    this.withdrawals = new Withdrawals(this);
   }
 
   async post<T>(path: string, body?: unknown, options: PostOptions = {}): Promise<Response<T>> {
