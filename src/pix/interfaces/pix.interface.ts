@@ -6,6 +6,7 @@ export interface PixCharge {
   amount: number;
   currency: string;
   pixCopyPaste: string;
+  qrCodeBase64?: string;
   expiresAt: string;
   externalReference?: string;
   customerId?: string;

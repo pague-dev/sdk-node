@@ -14,6 +14,7 @@ describe('Pix', () => {
         amount: 150.75,
         currency: 'BRL',
         pixCopyPaste: '00020126580014br.gov.bcb.pix0136...',
+        qrCodeBase64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...',
         expiresAt: '2024-12-31T23:59:59Z',
         externalReference: 'pedido-12345',
         customerId: '550e8400-e29b-41d4-a716-446655440001',

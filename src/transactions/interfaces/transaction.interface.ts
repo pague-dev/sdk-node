@@ -15,6 +15,7 @@ export interface Transaction {
   projectId?: string;
   metadata?: Record<string, unknown>;
   pixCopyPaste?: string;
+  qrCodeBase64?: string;
   expiresAt?: string;
   paidAt?: string;
   createdAt: string;
