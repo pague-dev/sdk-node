@@ -19,8 +19,11 @@ const pdev = new Pdev('pd_live_sua_api_key');
 // Opção 2: Usar variável de ambiente PDEV_API_KEY
 const pdev = new Pdev();
 
-// PIX
+// PIX Dinâmico
 await pdev.pix.create({ amount, description, customer });
+
+// PIX QR Code Estático
+await pdev.pix.createStaticQrCode({ amount, description });
 
 // Charges
 await pdev.charges.create({ projectId, name, amount, paymentMethods });
@@ -49,7 +52,7 @@ const event = parseWebhook(req.body);
 
 ## Recursos
 
-- **PIX** - Cobranças instantâneas
+- **PIX** - Cobranças instantâneas (dinâmico e estático)
 - **Charges** - Links de pagamento
 - **Customers** - Gestão de clientes
 - **Projects** - Organização por projetos
