@@ -1,16 +1,11 @@
 import type { Response } from '../../interfaces';
 import type { PixStatus } from './pix.interface';
 
-export interface StaticQrCodeTransaction {
-  description: string;
-  amount: number;
-  comment?: string;
-  externalReference?: string;
-}
-
 export interface CreateStaticQrCodeOptions {
-  transaction: StaticQrCodeTransaction;
+  amount: number;
+  description: string;
   projectId?: string;
+  externalReference?: string;
   metadata?: Record<string, unknown>;
 }
 
