@@ -1,3 +1,4 @@
+import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import type { WebhookEvent } from './interfaces';
 
 /**
@@ -67,6 +68,51 @@ function isValidWebhookEvent(event: unknown): event is WebhookEvent {
  * });
  * ```
  */
+/**
+ * Verifies the HMAC-SHA256 signature of a webhook payload.
+ *
+ * @param payload - The raw request body as a string
+ * @param signature - The signature from the `X-Webhook-Signature` header
+ * @param secret - Your webhook secret (plain text, before hashing)
+ * @returns `true` if the signature is valid, `false` otherwise
+ *
+ * @example
+ * ```typescript
+ * import { verifyWebhookSignature, parseWebhook } from '@pague-dev/sdk-node';
+ *
+ * app.post('/webhook', (req, res) => {
+ *   const signature = req.headers['x-webhook-signature'] as string;
+ *   const rawBody = req.body; // raw string body
+ *
+ *   if (!verifyWebhookSignature(rawBody, signature, 'your_webhook_secret')) {
+ *     return res.status(401).send('Invalid signature');
+ *   }
+ *
+ *   const event = parseWebhook(rawBody);
+ *   // handle event...
+ * });
+ * ```
+ */
+export function verifyWebhookSignature(
+  payload: string,
+  signature: string,
+  secret: string,
+): boolean {
+  if (!payload || !signature || !secret) return false;
+
+  try {
+    const signingKey = createHash('sha256').update(secret).digest('hex');
+    const expected = createHmac('sha256', signingKey).update(payload).digest('hex');
+
+    return timingSafeEqual(
+      Buffer.from(expected, 'hex'),
+      Buffer.from(signature, 'hex'),
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function parseWebhook(payload: string): WebhookEvent | null {
   let parsed: unknown;
 

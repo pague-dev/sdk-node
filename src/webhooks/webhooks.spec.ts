@@ -1,5 +1,6 @@
+import { createHash, createHmac } from 'node:crypto';
 import { describe, it, expect } from 'vitest';
-import { parseWebhook } from './verify';
+import { parseWebhook, verifyWebhookSignature } from './verify';
 import type { PaymentCompletedEvent } from './interfaces';
 
 describe('parseWebhook', () => {
@@ -154,5 +155,47 @@ describe('parseWebhook', () => {
     expect(parseWebhook(JSON.stringify(123))).toBeNull();
     expect(parseWebhook(JSON.stringify(null))).toBeNull();
     expect(parseWebhook(JSON.stringify([]))).toBeNull();
+  });
+});
+
+describe('verifyWebhookSignature', () => {
+  const secret = 'test_webhook_secret';
+  const payload = JSON.stringify({ event: 'payment_completed', eventId: '123' });
+
+  function computeSignature(body: string, userSecret: string): string {
+    const signingKey = createHash('sha256').update(userSecret).digest('hex');
+    return createHmac('sha256', signingKey).update(body).digest('hex');
+  }
+
+  it('should return true for a valid signature', () => {
+    const signature = computeSignature(payload, secret);
+    expect(verifyWebhookSignature(payload, signature, secret)).toBe(true);
+  });
+
+  it('should return false for an invalid signature', () => {
+    const wrongSignature = computeSignature(payload, 'wrong_secret');
+    expect(verifyWebhookSignature(payload, wrongSignature, secret)).toBe(false);
+  });
+
+  it('should return false for a tampered payload', () => {
+    const signature = computeSignature(payload, secret);
+    const tampered = JSON.stringify({ event: 'payment_completed', eventId: '456' });
+    expect(verifyWebhookSignature(tampered, signature, secret)).toBe(false);
+  });
+
+  it('should return false for empty payload', () => {
+    expect(verifyWebhookSignature('', 'abc', secret)).toBe(false);
+  });
+
+  it('should return false for empty signature', () => {
+    expect(verifyWebhookSignature(payload, '', secret)).toBe(false);
+  });
+
+  it('should return false for empty secret', () => {
+    expect(verifyWebhookSignature(payload, 'abc', '')).toBe(false);
+  });
+
+  it('should return false for malformed signature (non-hex)', () => {
+    expect(verifyWebhookSignature(payload, 'not-a-hex-signature', secret)).toBe(false);
   });
 });

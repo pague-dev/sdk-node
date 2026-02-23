@@ -13,4 +13,4 @@ export type {
   WebhookHeaders,
 } from './interfaces';
 
-export { parseWebhook } from './verify';
+export { parseWebhook, verifyWebhookSignature } from './verify';
