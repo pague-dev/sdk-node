@@ -46,7 +46,13 @@ await pdev.withdrawals.create({ amount, bankAccountId });
 await pdev.transactions.get(id);
 
 // Webhooks
-import { parseWebhook } from '@pague-dev/sdk-node';
+import { verifyWebhookSignature, parseWebhook } from '@pague-dev/sdk-node';
+
+const signature = req.headers['x-webhook-signature'] as string;
+if (!verifyWebhookSignature(req.body, signature, 'your_webhook_secret')) {
+  return res.status(401).send('Invalid signature');
+}
+
 const event = parseWebhook(req.body);
 ```
 
@@ -58,7 +64,7 @@ const event = parseWebhook(req.body);
 - **Projects** - Organização por projetos
 - **Withdrawals** - Saques via PIX (avulso ou conta salva)
 - **Transactions** - Consulta de transações
-- **Webhooks** - Notificações em tempo real
+- **Webhooks** - Verificação de assinatura e parsing de eventos
 
 ## Exemplo
 
