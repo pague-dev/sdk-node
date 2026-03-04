@@ -1,3 +1,4 @@
+export * from './account/interfaces';
 export * from './charges/interfaces';
 export * from './customers/interfaces';
 export type { ErrorResponse, PaginatedResponse, PaginationOptions, Response } from './interfaces';

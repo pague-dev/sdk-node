@@ -1,3 +1,4 @@
+import { Account } from './account/account';
 import { Charges } from './charges/charges';
 import { config } from './config';
 import { Customers } from './customers/customers';
@@ -12,6 +13,7 @@ export class Pdev {
   private readonly baseUrl: string;
   private readonly headers: Headers;
 
+  readonly account: Account;
   readonly pix: Pix;
   readonly customers: Customers;
   readonly projects: Projects;
@@ -43,6 +45,7 @@ export class Pdev {
       'Content-Type': 'application/json',
     });
 
+    this.account = new Account(this);
     this.pix = new Pix(this);
     this.customers = new Customers(this);
     this.projects = new Projects(this);
