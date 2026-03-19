@@ -23,6 +23,7 @@ export interface CompanyDetail {
 export interface BalanceDetail {
   available: BalanceAmount;
   promotional: BalanceAmount;
+  held: BalanceAmount;
   total: BalanceAmount;
   currency: string;
   updatedAt: string;
