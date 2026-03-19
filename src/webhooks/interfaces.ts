@@ -3,6 +3,7 @@
  */
 export type WebhookEventType =
   | 'payment_completed'
+  | 'payment_expired'
   | 'refund_completed'
   | 'withdrawal_completed'
   | 'withdrawal_failed';
@@ -43,6 +44,28 @@ export interface PaymentCompletedData {
   status: 'completed';
   /** ISO 8601 timestamp of when payment was completed */
   completedAt: string;
+  /** Your external reference ID (optional) */
+  externalReference?: string;
+  /** Custom metadata passed when creating the payment */
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Data payload for payment_expired event
+ */
+export interface PaymentExpiredData {
+  /** Transaction identifier */
+  transactionId: string;
+  /** Payment amount */
+  amount: number;
+  /** Currency code (e.g., "BRL") */
+  currency: string;
+  /** Payment method used (e.g., "pix") */
+  paymentMethod: string;
+  /** Payment status */
+  status: 'expired';
+  /** ISO 8601 timestamp of when payment expired */
+  expiredAt: string;
   /** Your external reference ID (optional) */
   externalReference?: string;
   /** Custom metadata passed when creating the payment */
@@ -131,6 +154,11 @@ export interface WithdrawalFailedData {
 export type PaymentCompletedEvent = WebhookPayload<'payment_completed', PaymentCompletedData>;
 
 /**
+ * Payment expired webhook event
+ */
+export type PaymentExpiredEvent = WebhookPayload<'payment_expired', PaymentExpiredData>;
+
+/**
  * Refund completed webhook event
  */
 export type RefundCompletedEvent = WebhookPayload<'refund_completed', RefundCompletedData>;
@@ -150,6 +178,7 @@ export type WithdrawalFailedEvent = WebhookPayload<'withdrawal_failed', Withdraw
  */
 export type WebhookEvent =
   | PaymentCompletedEvent
+  | PaymentExpiredEvent
   | RefundCompletedEvent
   | WithdrawalCompletedEvent
   | WithdrawalFailedEvent;

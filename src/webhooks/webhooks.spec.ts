@@ -42,6 +42,37 @@ describe('parseWebhook', () => {
     }
   });
 
+  it('should parse a valid payment_expired event', () => {
+    const expiredPayload = {
+      event: 'payment_expired',
+      eventId: 'payment_expired_d5e6f7a8-1234-5678-9abc-def012345678',
+      timestamp: '2026-01-11T19:30:00.000Z',
+      data: {
+        transactionId: 'd5e6f7a8-1234-5678-9abc-def012345678',
+        amount: 75.50,
+        currency: 'BRL',
+        paymentMethod: 'pix',
+        status: 'expired',
+        expiredAt: '2026-01-11T19:30:00.000Z',
+        externalReference: 'pedido-12345',
+        metadata: { orderId: 'ORDER-12345' },
+      },
+    };
+
+    const event = parseWebhook(JSON.stringify(expiredPayload));
+
+    expect(event).not.toBeNull();
+    expect(event?.event).toBe('payment_expired');
+    if (event?.event === 'payment_expired') {
+      expect(event.data.transactionId).toBe('d5e6f7a8-1234-5678-9abc-def012345678');
+      expect(event.data.amount).toBe(75.50);
+      expect(event.data.status).toBe('expired');
+      expect(event.data.expiredAt).toBe('2026-01-11T19:30:00.000Z');
+      expect(event.data.externalReference).toBe('pedido-12345');
+      expect(event.data.metadata).toEqual({ orderId: 'ORDER-12345' });
+    }
+  });
+
   it('should parse a valid refund_completed event', () => {
     const refundPayload = {
       event: 'refund_completed',
