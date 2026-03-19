@@ -49,7 +49,10 @@ describe('parseWebhook', () => {
       timestamp: '2026-01-11T19:30:00.000Z',
       data: {
         transactionId: 'd5e6f7a8-1234-5678-9abc-def012345678',
+        environment: 'sandbox',
         amount: 75.50,
+        feeAmount: 0,
+        netAmount: 0,
         currency: 'BRL',
         paymentMethod: 'pix',
         status: 'expired',
@@ -65,7 +68,10 @@ describe('parseWebhook', () => {
     expect(event?.event).toBe('payment_expired');
     if (event?.event === 'payment_expired') {
       expect(event.data.transactionId).toBe('d5e6f7a8-1234-5678-9abc-def012345678');
+      expect(event.data.environment).toBe('sandbox');
       expect(event.data.amount).toBe(75.50);
+      expect(event.data.feeAmount).toBe(0);
+      expect(event.data.netAmount).toBe(0);
       expect(event.data.status).toBe('expired');
       expect(event.data.expiredAt).toBe('2026-01-11T19:30:00.000Z');
       expect(event.data.externalReference).toBe('pedido-12345');
@@ -86,8 +92,10 @@ describe('parseWebhook', () => {
         feeAmount: 0.25,
         netAmount: 49.75,
         currency: 'BRL',
+        paymentMethod: 'pix',
         status: 'completed',
-        completedAt: '2026-01-11T19:22:15.400Z',
+        refundedAt: '2026-01-11T19:22:15.400Z',
+        externalReference: 'pedido-12345',
       },
     };
 
@@ -98,6 +106,8 @@ describe('parseWebhook', () => {
     if (event?.event === 'refund_completed') {
       expect(event.data.originalTransactionId).toBe('a0b78f10-c7f4-4f5d-98dd-3e36eafeb812');
       expect(event.data.netAmount).toBe(49.75);
+      expect(event.data.paymentMethod).toBe('pix');
+      expect(event.data.externalReference).toBe('pedido-12345');
     }
   });
 
@@ -153,6 +163,36 @@ describe('parseWebhook', () => {
     if (event?.event === 'withdrawal_failed') {
       expect(event.data.withdrawalId).toBe('b84f12c3-9a21-4e67-bc88-1d45f6789abc');
       expect(event.data.failureReason).toBe('insufficient_funds');
+    }
+  });
+
+  it('should parse a valid withdrawal_reversed event', () => {
+    const reversedPayload = {
+      event: 'withdrawal_reversed',
+      eventId: 'f12a34b5-6c78-9d01-ef23-456789abcdef',
+      timestamp: '2026-01-11T20:00:00.000Z',
+      data: {
+        reversalTransactionId: 'f12a34b5-6c78-9d01-ef23-456789abcdef',
+        originalTransactionId: 'e73775b5-70ee-4bad-be4c-4acff9890e27',
+        environment: 'sandbox',
+        amount: 500.0,
+        feeAmount: 0,
+        netAmount: 500.0,
+        currency: 'BRL',
+        paymentMethod: 'pix',
+        status: 'completed',
+        reversedAt: '2026-01-11T20:00:00.000Z',
+      },
+    };
+
+    const event = parseWebhook(JSON.stringify(reversedPayload));
+
+    expect(event).not.toBeNull();
+    expect(event?.event).toBe('withdrawal_reversed');
+    if (event?.event === 'withdrawal_reversed') {
+      expect(event.data.reversalTransactionId).toBe('f12a34b5-6c78-9d01-ef23-456789abcdef');
+      expect(event.data.originalTransactionId).toBe('e73775b5-70ee-4bad-be4c-4acff9890e27');
+      expect(event.data.netAmount).toBe(500.0);
     }
   });
 

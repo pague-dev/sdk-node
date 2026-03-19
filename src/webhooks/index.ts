@@ -6,11 +6,13 @@ export type {
   RefundCompletedData,
   WithdrawalCompletedData,
   WithdrawalFailedData,
+  WithdrawalReversedData,
   PaymentCompletedEvent,
   PaymentExpiredEvent,
   RefundCompletedEvent,
   WithdrawalCompletedEvent,
   WithdrawalFailedEvent,
+  WithdrawalReversedEvent,
   WebhookEvent,
   WebhookHeaders,
 } from './interfaces';

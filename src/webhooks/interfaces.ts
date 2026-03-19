@@ -6,7 +6,8 @@ export type WebhookEventType =
   | 'payment_expired'
   | 'refund_completed'
   | 'withdrawal_completed'
-  | 'withdrawal_failed';
+  | 'withdrawal_failed'
+  | 'withdrawal_reversed';
 
 /**
  * Base webhook payload structure
@@ -56,8 +57,14 @@ export interface PaymentCompletedData {
 export interface PaymentExpiredData {
   /** Transaction identifier */
   transactionId: string;
+  /** Environment where the transaction occurred */
+  environment: 'production' | 'sandbox';
   /** Payment amount */
   amount: number;
+  /** Platform fees (always 0 for expired payments) */
+  feeAmount: number;
+  /** Net amount (always 0 for expired payments) */
+  netAmount: number;
   /** Currency code (e.g., "BRL") */
   currency: string;
   /** Payment method used (e.g., "pix") */
@@ -90,10 +97,14 @@ export interface RefundCompletedData {
   netAmount: number;
   /** Currency code (e.g., "BRL") */
   currency: string;
+  /** Payment method of the original transaction */
+  paymentMethod: string;
   /** Refund status */
   status: 'completed';
   /** ISO 8601 timestamp of when refund was completed */
-  completedAt: string;
+  refundedAt: string;
+  /** Your external reference ID from the original payment (optional) */
+  externalReference?: string;
   /** Custom metadata from the original payment */
   metadata?: Record<string, unknown>;
 }
@@ -149,6 +160,36 @@ export interface WithdrawalFailedData {
 }
 
 /**
+ * Data payload for withdrawal_reversed event
+ */
+export interface WithdrawalReversedData {
+  /** Reversal transaction identifier */
+  reversalTransactionId: string;
+  /** Original withdrawal transaction ID that was reversed */
+  originalTransactionId: string;
+  /** Environment where the transaction occurred */
+  environment: 'production' | 'sandbox';
+  /** Reversal amount */
+  amount: number;
+  /** Fees charged for the reversal */
+  feeAmount: number;
+  /** Net amount after fees */
+  netAmount: number;
+  /** Currency code (e.g., "BRL") */
+  currency: string;
+  /** Payment method (e.g., "pix") */
+  paymentMethod: string;
+  /** Reversal status */
+  status: 'completed';
+  /** ISO 8601 timestamp of when withdrawal was reversed */
+  reversedAt: string;
+  /** Your external reference ID from the original withdrawal (optional) */
+  externalReference?: string;
+  /** Custom metadata from the original withdrawal */
+  metadata?: Record<string, unknown>;
+}
+
+/**
  * Payment completed webhook event
  */
 export type PaymentCompletedEvent = WebhookPayload<'payment_completed', PaymentCompletedData>;
@@ -174,6 +215,11 @@ export type WithdrawalCompletedEvent = WebhookPayload<'withdrawal_completed', Wi
 export type WithdrawalFailedEvent = WebhookPayload<'withdrawal_failed', WithdrawalFailedData>;
 
 /**
+ * Withdrawal reversed webhook event
+ */
+export type WithdrawalReversedEvent = WebhookPayload<'withdrawal_reversed', WithdrawalReversedData>;
+
+/**
  * Union type of all possible webhook events
  */
 export type WebhookEvent =
@@ -181,7 +227,8 @@ export type WebhookEvent =
   | PaymentExpiredEvent
   | RefundCompletedEvent
   | WithdrawalCompletedEvent
-  | WithdrawalFailedEvent;
+  | WithdrawalFailedEvent
+  | WithdrawalReversedEvent;
 
 /**
  * Webhook headers sent with each request

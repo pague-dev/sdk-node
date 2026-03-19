@@ -16,7 +16,7 @@ function isValidWebhookEvent(event: unknown): event is WebhookEvent {
   if (typeof obj.timestamp !== 'string') return false;
   if (typeof obj.data !== 'object' || obj.data === null) return false;
 
-  const validEvents = ['payment_completed', 'payment_expired', 'refund_completed', 'withdrawal_completed', 'withdrawal_failed'];
+  const validEvents = ['payment_completed', 'payment_expired', 'refund_completed', 'withdrawal_completed', 'withdrawal_failed', 'withdrawal_reversed'];
   return validEvents.includes(obj.event);
 }
 
