@@ -7,7 +7,8 @@ export type WebhookEventType =
   | 'refund_completed'
   | 'withdrawal_completed'
   | 'withdrawal_failed'
-  | 'withdrawal_reversed';
+  | 'withdrawal_reversed'
+  | 'balance_block_created';
 
 /**
  * Base webhook payload structure
@@ -220,6 +221,37 @@ export type WithdrawalFailedEvent = WebhookPayload<'withdrawal_failed', Withdraw
 export type WithdrawalReversedEvent = WebhookPayload<'withdrawal_reversed', WithdrawalReversedData>;
 
 /**
+ * Data payload for balance_block_created event
+ */
+export interface BalanceBlockCreatedData {
+  /** Balance block identifier */
+  blockId: string;
+  /** Transaction ID of the blocked transaction */
+  transactionId: string;
+  /** Environment where the block was created */
+  environment: 'production' | 'sandbox';
+  /** Blocked amount in BRL */
+  amount: number;
+  /** Currency code (e.g., "BRL") */
+  currency: string;
+  /** Type of block (med, judicial, administrative) */
+  blockType: 'med' | 'judicial' | 'administrative';
+  /** Block reference number */
+  referenceNumber: string;
+  /** Reason for the block */
+  reason: string;
+  /** Block status */
+  status: 'awaiting_response';
+  /** ISO 8601 timestamp of when block was created */
+  createdAt: string;
+}
+
+/**
+ * Balance block created webhook event
+ */
+export type BalanceBlockCreatedEvent = WebhookPayload<'balance_block_created', BalanceBlockCreatedData>;
+
+/**
  * Union type of all possible webhook events
  */
 export type WebhookEvent =
@@ -228,7 +260,8 @@ export type WebhookEvent =
   | RefundCompletedEvent
   | WithdrawalCompletedEvent
   | WithdrawalFailedEvent
-  | WithdrawalReversedEvent;
+  | WithdrawalReversedEvent
+  | BalanceBlockCreatedEvent;
 
 /**
  * Webhook headers sent with each request
