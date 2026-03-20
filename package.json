@@ -1,6 +1,6 @@
 {
   "name": "@pague-dev/sdk-node",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Node.js SDK for the pague.dev API",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
