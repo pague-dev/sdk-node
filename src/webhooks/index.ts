@@ -8,6 +8,8 @@ export type {
   WithdrawalFailedData,
   WithdrawalReversedData,
   BalanceBlockCreatedData,
+  BalanceBlockApprovedData,
+  BalanceBlockRejectedData,
   PaymentCompletedEvent,
   PaymentExpiredEvent,
   RefundCompletedEvent,
@@ -15,6 +17,8 @@ export type {
   WithdrawalFailedEvent,
   WithdrawalReversedEvent,
   BalanceBlockCreatedEvent,
+  BalanceBlockApprovedEvent,
+  BalanceBlockRejectedEvent,
   WebhookEvent,
   WebhookHeaders,
 } from './interfaces';

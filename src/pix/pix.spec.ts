@@ -79,11 +79,9 @@ describe('Pix', () => {
 
       const pdev = new Pdev('pd_test_xxx');
       const result = await pdev.pix.createStaticQrCode({
-        transaction: {
-          description: 'Pagamento na loja',
-          amount: 49.9,
-          externalReference: 'qr-loja-001',
-        },
+        description: 'Pagamento na loja',
+        amount: 49.9,
+        externalReference: 'qr-loja-001',
       });
 
       expect(result.data).toEqual(mockResponse);
@@ -105,10 +103,8 @@ describe('Pix', () => {
 
       const pdev = new Pdev('pd_test_xxx');
       const result = await pdev.pix.createStaticQrCode({
-        transaction: {
-          description: 'Pagamento na loja',
-          amount: -10,
-        },
+        description: 'Pagamento na loja',
+        amount: -10,
       });
 
       expect(result.data).toBeNull();

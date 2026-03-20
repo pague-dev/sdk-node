@@ -8,7 +8,9 @@ export type WebhookEventType =
   | 'withdrawal_completed'
   | 'withdrawal_failed'
   | 'withdrawal_reversed'
-  | 'balance_block_created';
+  | 'balance_block_created'
+  | 'balance_block_approved'
+  | 'balance_block_rejected';
 
 /**
  * Base webhook payload structure
@@ -252,6 +254,76 @@ export interface BalanceBlockCreatedData {
 export type BalanceBlockCreatedEvent = WebhookPayload<'balance_block_created', BalanceBlockCreatedData>;
 
 /**
+ * Data payload for balance_block_approved event
+ */
+export interface BalanceBlockApprovedData {
+  /** Balance block identifier */
+  blockId: string;
+  /** Transaction ID of the blocked transaction */
+  transactionId: string;
+  /** Environment where the block was created */
+  environment: 'production' | 'sandbox';
+  /** Blocked amount in BRL */
+  amount: number;
+  /** Currency code (e.g., "BRL") */
+  currency: string;
+  /** Type of block (med, judicial, administrative) */
+  blockType: 'med' | 'judicial' | 'administrative';
+  /** Block reference number */
+  referenceNumber: string;
+  /** Original reason for the block */
+  reason: string;
+  /** Reason for resolution (optional) */
+  resolutionReason: string | null;
+  /** Block status */
+  status: 'approved';
+  /** ISO 8601 timestamp of when block was created */
+  createdAt: string;
+  /** ISO 8601 timestamp of when block was resolved */
+  resolvedAt: string | null;
+}
+
+/**
+ * Balance block approved webhook event
+ */
+export type BalanceBlockApprovedEvent = WebhookPayload<'balance_block_approved', BalanceBlockApprovedData>;
+
+/**
+ * Data payload for balance_block_rejected event
+ */
+export interface BalanceBlockRejectedData {
+  /** Balance block identifier */
+  blockId: string;
+  /** Transaction ID of the blocked transaction */
+  transactionId: string;
+  /** Environment where the block was created */
+  environment: 'production' | 'sandbox';
+  /** Blocked amount in BRL */
+  amount: number;
+  /** Currency code (e.g., "BRL") */
+  currency: string;
+  /** Type of block (med, judicial, administrative) */
+  blockType: 'med' | 'judicial' | 'administrative';
+  /** Block reference number */
+  referenceNumber: string;
+  /** Original reason for the block */
+  reason: string;
+  /** Reason for resolution (optional) */
+  resolutionReason: string | null;
+  /** Block status */
+  status: 'rejected';
+  /** ISO 8601 timestamp of when block was created */
+  createdAt: string;
+  /** ISO 8601 timestamp of when block was resolved */
+  resolvedAt: string | null;
+}
+
+/**
+ * Balance block rejected webhook event
+ */
+export type BalanceBlockRejectedEvent = WebhookPayload<'balance_block_rejected', BalanceBlockRejectedData>;
+
+/**
  * Union type of all possible webhook events
  */
 export type WebhookEvent =
@@ -261,7 +333,9 @@ export type WebhookEvent =
   | WithdrawalCompletedEvent
   | WithdrawalFailedEvent
   | WithdrawalReversedEvent
-  | BalanceBlockCreatedEvent;
+  | BalanceBlockCreatedEvent
+  | BalanceBlockApprovedEvent
+  | BalanceBlockRejectedEvent;
 
 /**
  * Webhook headers sent with each request
