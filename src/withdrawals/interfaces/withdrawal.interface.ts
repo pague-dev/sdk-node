@@ -17,4 +17,5 @@ export interface Withdrawal {
   pspReference: string | null;
   createdAt: string;
   processedAt: string | null;
+  externalReference: string | null;
 }
