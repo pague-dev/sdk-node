@@ -6,6 +6,8 @@ export interface CreateStaticQrCodeOptions {
   description: string;
   projectId?: string;
   externalReference?: string;
+  /** Seconds until the static QR code expires. Defaults to 86400 (24h). */
+  expiresIn?: number;
   metadata?: Record<string, unknown>;
 }
 
@@ -17,6 +19,7 @@ export interface StaticQrCode {
   pixCopyPaste: string;
   qrCodeBase64?: string;
   externalReference?: string;
+  expiresAt: string;
   createdAt: string;
 }
 
