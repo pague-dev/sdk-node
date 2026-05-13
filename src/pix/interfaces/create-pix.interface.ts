@@ -11,7 +11,16 @@ export interface CreatePixCustomer {
 export interface CreatePixOptions {
   amount: number;
   description?: string;
+  /**
+   * Existing customer ID. Provide either `customerId` or `customer`, not both.
+   * If both are omitted, the endpoint creates a static QR code (no payer, no
+   * invoice). Static path requires the account's PSP to be `avista` or `mock`.
+   */
   customerId?: string;
+  /**
+   * Inline customer data. Provide either `customerId` or `customer`, not both.
+   * If both are omitted, the endpoint creates a static QR code.
+   */
   customer?: CreatePixCustomer;
   projectId?: string;
   expiresIn?: number;
