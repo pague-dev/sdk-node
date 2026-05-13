@@ -50,6 +50,12 @@ export interface PaymentCompletedData {
   completedAt: string;
   /** Your external reference ID (optional) */
   externalReference?: string;
+  /** End-to-end PIX network ID (optional, present when available) */
+  e2eId?: string | null;
+  /** Payer name as returned by the PSP (optional) */
+  counterpartName?: string | null;
+  /** Payer CPF/CNPJ as returned by the PSP, unmasked (optional) */
+  counterpartDocument?: string | null;
   /** Custom metadata passed when creating the payment */
   metadata?: Record<string, unknown>;
 }
@@ -94,9 +100,13 @@ export interface RefundCompletedData {
   environment: 'production' | 'sandbox';
   /** Refunded amount */
   amount: number;
-  /** Fees charged for the refund */
+  /** Refund fee charged from the merchant balance (separate debit) */
   feeAmount: number;
-  /** Net amount after fees */
+  /**
+   * Amount received by the end customer — equal to `amount`. The refund fee is
+   * debited separately from the merchant balance, so the merchant's total cost
+   * is `amount + feeAmount`.
+   */
   netAmount: number;
   /** Currency code (e.g., "BRL") */
   currency: string;
@@ -132,6 +142,14 @@ export interface WithdrawalCompletedData {
   status: 'completed';
   /** ISO 8601 timestamp of when withdrawal was completed */
   completedAt: string;
+  /** Your external reference ID sent on withdrawal creation (optional) */
+  externalReference?: string | null;
+  /** End-to-end PIX network ID (optional, present after PSP confirmation) */
+  e2eId?: string | null;
+  /** Recipient holder name (optional) */
+  counterpartName?: string | null;
+  /** Recipient holder CPF/CNPJ, unmasked (optional) */
+  counterpartDocument?: string | null;
   /** Custom metadata from the withdrawal request */
   metadata?: Record<string, unknown>;
 }
@@ -158,6 +176,14 @@ export interface WithdrawalFailedData {
   failedAt: string;
   /** Reason for failure (e.g., "insufficient_funds", "invalid_account") */
   failureReason: string;
+  /** Your external reference ID sent on withdrawal creation (optional) */
+  externalReference?: string | null;
+  /** End-to-end PIX network ID (optional, present only if PSP processed the withdrawal) */
+  e2eId?: string | null;
+  /** Recipient holder name (optional) */
+  counterpartName?: string | null;
+  /** Recipient holder CPF/CNPJ, unmasked (optional) */
+  counterpartDocument?: string | null;
   /** Custom metadata from the withdrawal request */
   metadata?: Record<string, unknown>;
 }
@@ -246,6 +272,10 @@ export interface BalanceBlockCreatedData {
   status: 'awaiting_response';
   /** ISO 8601 timestamp of when block was created */
   createdAt: string;
+  /** External reference from the original transaction (optional) */
+  externalReference?: string | null;
+  /** End-to-end PIX network ID from the original transaction (optional) */
+  e2eId?: string | null;
 }
 
 /**
@@ -281,6 +311,10 @@ export interface BalanceBlockApprovedData {
   createdAt: string;
   /** ISO 8601 timestamp of when block was resolved */
   resolvedAt: string | null;
+  /** External reference from the original transaction (optional) */
+  externalReference?: string | null;
+  /** End-to-end PIX network ID from the original transaction (optional) */
+  e2eId?: string | null;
 }
 
 /**
@@ -316,6 +350,10 @@ export interface BalanceBlockRejectedData {
   createdAt: string;
   /** ISO 8601 timestamp of when block was resolved */
   resolvedAt: string | null;
+  /** External reference from the original transaction (optional) */
+  externalReference?: string | null;
+  /** End-to-end PIX network ID from the original transaction (optional) */
+  e2eId?: string | null;
 }
 
 /**
