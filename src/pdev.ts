@@ -1,4 +1,5 @@
 import { Account } from './account/account';
+import { BalanceBlocks } from './balance-blocks/balance-blocks';
 import { Charges } from './charges/charges';
 import { config } from './config';
 import { Customers } from './customers/customers';
@@ -20,6 +21,7 @@ export class Pdev {
   readonly charges: Charges;
   readonly transactions: Transactions;
   readonly withdrawals: Withdrawals;
+  readonly balanceBlocks: BalanceBlocks;
 
   constructor(key?: string) {
     if (!key) {
@@ -52,6 +54,7 @@ export class Pdev {
     this.charges = new Charges(this);
     this.transactions = new Transactions(this);
     this.withdrawals = new Withdrawals(this);
+    this.balanceBlocks = new BalanceBlocks(this);
   }
 
   async post<T>(path: string, body?: unknown, options: PostOptions = {}): Promise<Response<T>> {
