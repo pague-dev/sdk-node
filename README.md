@@ -38,9 +38,10 @@ await pdev.customers.list({ page, limit, search });
 await pdev.projects.create({ name, color });
 await pdev.projects.list({ page, limit });
 
-// Withdrawals (Saques PIX)
+// Withdrawals (Saques PIX) — provide either `amount` (gross debited) OR `netAmount` (net the recipient receives)
 await pdev.withdrawals.create({ amount, pixKey, pixKeyType, holderName, holderDocument });
 await pdev.withdrawals.create({ amount, bankAccountId });
+await pdev.withdrawals.create({ netAmount, bankAccountId });
 
 // Transactions
 await pdev.transactions.get(id);

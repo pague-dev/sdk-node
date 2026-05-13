@@ -2,7 +2,17 @@ import type { Response } from '../../interfaces';
 import type { PixKeyType, Withdrawal } from './withdrawal.interface';
 
 export interface CreateWithdrawalOptions {
-  amount: number;
+  /**
+   * Gross amount in BRL debited from your balance. Recipient receives
+   * `amount - feeAmount`. Provide either `amount` OR `netAmount`, never both.
+   */
+  amount?: number;
+  /**
+   * Net amount in BRL the recipient should receive. The API derives the gross
+   * automatically (`gross = netAmount + feeAmount`) and debits that from your
+   * balance. Provide either `amount` OR `netAmount`, never both.
+   */
+  netAmount?: number;
   bankAccountId?: string;
   pixKey?: string;
   pixKeyType?: PixKeyType;
